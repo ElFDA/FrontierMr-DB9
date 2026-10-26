@@ -1,0 +1,121 @@
+# Changelog
+
+All the releases of Frontier, newest first.
+Each release is on the [Releases page](https://github.com/ElFDA/FrontierMr/releases); the text of
+a release is its entry here.
+
+## v2026.10.25b
+* **Pictures, videos and descriptions for the launchers of a system** (the MGL files listed with `launchers=`,
+  e.g. the X68000 games): they were looked up under `mgl` and never found; they now use the media of the
+  system, by the name of the MGL.
+* **Back from an MGL launcher, Frontier reopens the same list** (the X68000 games), not the MiSTer folder
+  `_Computer/_X68000 Games`.
+* **Commodore 64 disks start by themselves**: after the disk image the MGL loads a small PRG
+  (`frontier/autorun/c64.prg`) which types `LOAD"*",8,1` and `RUN`, as MeGaLoSorTer does. Before, a `.d64`
+  left the C64 at the `READY.` prompt.
+* **Coleco Adam and Apple III disks now start**: the MGL adds a reset after the disk is mounted
+  (`reset=` in `systems.ini`), so the machine boots from it. Tested with `tools/fe/launch_test.py`, which
+  launches one file per slot on the MiSTer and takes screenshots.
+* **Launch indexes of 22 systems corrected** (VIC-20 disks, MacPlus floppies, TRS-80 disks, MSX, Aquarius, Apogee,
+  ColecoAdam, Galaksija, Orao...): the MGL finds the OSD entry of the core by its number and a wrong number
+  made it load the first entry. `tools/fe/systems/check_conf.py` compares every slot with the real core.
+
+## v2026.10.25
+* **Fix: Amiga with a hard disk did not boot.** `MiSTer` is now built on the stable release 20261010
+  of Main_MiSTer (the one `update_all` installs), not on a later commit of `master`: that build needed a
+  newer Minimig core than the stable one, so an Amiga configuration with a hard disk (e.g. MegaAGS)
+  stayed on black and grey screens. From now on Frontier follows the stable releases only
+  (`tools/fe/upstream_check.sh` checks it). The Minimig options added after that release (68030,
+  drive sounds) come back with the next one.
+* **Amiga configurations**: Amiga, Amiga 500, Amiga 500HD and Amiga 600HD are all in the Computer
+  category, each with its own folder in `games/`; the MGL of `_Computer` which starts the
+  configuration (e.g. the one which boots from a `.hdf`) is the first entry of the folder
+  (`launchers=` in `systems.ini`, usable for any core with several MGLs). Before, only "Amiga" was
+  there and it started nothing without `.adf` files.
+* **X68000 games**: the MGLs of `_Computer/_X68000 Games` (the games of the classic menu) are now in
+  Computer → Sharp X68000, alphabetical, as the first entries of its folder.
+* **VIC-20**: `.rom` cartridges (Ultimate Cartridge, Megacart) now start (file index 2 of the core).
+* **`fe_scrape.py --dedupe-media`** (with `--dry-run` to only see): the arcade versions scraped one by
+  one by older runs have copies of the pictures and videos of their main game; they now use the files
+  of the main game and the identical copies are deleted (7067 files, 8.2 GB on the test MiSTer).
+  No network; different pictures stay.
+* Only `MiSTer`, `systems.ini` and the scraper script change; `menu.rbf` and `fe_av.so` are the same as in `v2026.10.24b`.
+
+## v2026.10.24b
+* **"#Newest" groups the versions of a game.** The new `.mra` which use the same romset (the
+  regions and revisions of a core, or the same game from two cores) are one entry, as in the Arcade
+  folder, and the others are the versions of the detail view: 219 new files were 189 games on the
+  test MiSTer. Clones with another title (Space Invaders / Balloon Bomber, Pac-Man / Ms. Pac-Man)
+  stay separate games.
+* **Faster arcade scraper**: the `.mra` outside `_alternatives` which are versions of one game (the
+  regions of a core, such as Heavy Unit World / Japan / US) are scraped once, the others take its data
+  and pictures like the alternatives do (443 of 2784 games on the test MiSTer, no BIOS or other-title
+  clone joins).
+* Only `MiSTer` changes (and the scraper script); `menu.rbf` and `fe_av.so` are the same as in `v2026.10.24`.
+
+## v2026.10.24
+* **Fix: "#Newest" (Arcade folder) was empty just after the power on.** The MiSTer has no clock of its
+  own: until the network sets it (20-30 seconds after the start) the date is 1970, and Frontier gave up
+  before reading the games it already knew, so the list showed nothing. Now it shows the known ones
+  at once; the new games get their day as soon as the clock is right (open "#Newest" again or press F5).
+* Only `MiSTer` changes; `menu.rbf` and `fe_av.so` are the same as in `v2026.10.23c`.
+
+## v2026.10.23c
+* **Fix: `frontier_install` stopped with "Custom base_system_path"** on older `downloader.ini` files
+  (the example of Downloader up to 1.5, still found on many SD cards: `base_system_path = '/media/fat/'`,
+  with the slash at the end): Frontier was not installed and the MiSTer stayed on the official menu. The path is now read as `/media/fat`;
+  a really different path is still refused. `frontier_uninstall` stopped with the same error.
+* The program (`MiSTer`, `menu.rbf`, `fe_av.so`) is the same as in `v2026.10.23b`.
+
+## v2026.10.23b
+* **Faster scraper**, above all for arcade games: the `.mra` files are read once and kept in a
+  cache, ArcadeDB is asked only for the games to do (in a few batches), the gamelist is written in
+  one go (seconds instead of a minute on the SD card) and not written at all when nothing changed,
+  the index of the lists keeps the systems not scraped.
+* **Games not found are remembered**: a game that no source has (hacks, bootlegs, homebrew) is
+  skipped for 30 days, so the counter shows only the games to do; network errors do not count.
+  Frontier Settings -> Scraper -> Games already scraped -> "retry not found" (`--retry-missing`)
+  tries them at once.
+* **Arcade alternatives** (`_Arcade/_alternatives`) take the data and the pictures of their main game,
+  keeping their own name, without requests or copies; only those without a main game are scraped.
+* The scraper finds the pictures already there whatever the case of the letters, as Frontier does
+  ("Revision 1" and "revision 1" are the same file on the SD card): they are no longer downloaded
+  again at every run.
+* At the end Frontier says what the run brought: "finished: 3 updated" or "finished: nothing new", and
+  the message also counts the games not found.
+* The scraper started from Frontier runs on the core of the processor that Frontier leaves free: before it
+  shared the busy one and was about 9 times slower (an arcade run with nothing to do: 5 minutes, now about one).
+* **Scrape this game**: in the details of a game, under "Add to list...", the scraper for that game only
+  (asked again to the sources, data and pictures downloaded again; `--game` from a terminal).
+* While the scraper gets ready Frontier shows what it is doing ("checking what is missing",
+  "asking ArcadeDB") instead of "0/…".
+
+## v2026.10.23
+* **Theme editor as a download of its own.** `theme_editor.html` is now a file of every release (on the
+  Releases page, next to the ZIP): it is a tool for the PC, so it is not in the ZIP for the SD card.
+  Latest version: <https://github.com/ElFDA/FrontierMr/releases/latest/download/theme_editor.html>.
+  The theme guides and the README point there.
+* Theme editor: the sample data now has `${game.cpu}`, `${game.memory}`, `${game.graphics}`,
+  `${game.sound}`, `${game.media}` and `${game.units}` (the data of the systems), so the themes that
+  use them can be previewed.
+* New step by step guide: [Theme editor](docs/THEME_EDITOR.md) (English and Italian).
+* README: beta note at the top, screenshots and credits.
+* New: this changelog. The program (`MiSTer`, `menu.rbf`, `fe_av.so`) is the same as in `v2026.10.22c`.
+
+## v2026.10.22c
+* New step by step guides: [Coin-Op mode](docs/COINOP.md) and
+  [getting the MiSTer back from a game with a black screen](docs/BLACK_SCREEN.md) (English and Italian).
+
+## v2026.10.22b
+First release kept online (the earlier `v2026.10.22` was withdrawn).
+* Installation through `update_all` first (`downloader_frontiermr.ini`), the ZIP as an alternative;
+  the database of `update_all` takes every file from the ZIP of the release.
+* Step by step guides: [scraper](docs/SCRAPER.md), [lists](docs/LISTS.md),
+  [which version of a game starts](docs/VERSIONS.md) (English and Italian).
+* CRT output without editing files: Frontier Settings -> CRT output and `Scripts/frontier_crt`.
+* Frontier Settings: folders first, then the single entries, in alphabetical order.
+* In the OSD of a game, "Core" opens the browser of the cores as in the original; Alt+F12 goes back to Frontier.
+* Fix: the empty `filter =` left by `protect_updates --disable` made `downloader.ini` unreadable
+  when Frontier was installed again.
+* The `frontier_scrape` script is gone: the scraper starts from Frontier Settings.
+* README of the repository with the `MiSTer.ini` settings for CRT, HDMI and CRT + HDMI.

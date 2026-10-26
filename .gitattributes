@@ -30,3 +30,5 @@ Makefile text eol=lf
 *.rbf  binary
 *.rom  binary
 *.xlsx binary
+tools/fe/menu_frontier.patch -text
+tools/fe/sd/frontier/autorun/*.prg -text

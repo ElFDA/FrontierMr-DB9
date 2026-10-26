@@ -69,6 +69,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "profiling.h"
 #include "str_util.h"
 #include "autofire.h"
+#include "frontier.h" // FRONTIER
+#include "fe_loading.h" // FRONTIER
 // [MiSTer-DB9-Pro BEGIN] - hide Saturn from OSD when key locked
 #include "db9_key.h"
 // [MiSTer-DB9-Pro END]
@@ -95,6 +97,8 @@ enum MENU
 	MENU_CORE_FILE_SELECTED1,
 	MENU_CORE_FILE_SELECTED2,
 	MENU_CORE_FILE_CANCELED,
+	MENU_FRONTIER1, // FRONTIER
+	MENU_FRONTIER2, // FRONTIER
 	MENU_RECENT1,
 	MENU_RECENT2,
 	MENU_RECENT3,
@@ -653,7 +657,7 @@ static uint32_t menu_key_get(void)
 		else if (CheckTimer(repeat))
 		{
 			repeat = GetTimer(REPEATRATE);
-			if (GetASCIIKey(c1) || menustate == MENU_FILE_SELECT2 || ((menustate == MENU_COMMON2) && (menusub == 17)) || ((menustate == MENU_SYSTEM2) && (menusub == 5)))
+			if (GetASCIIKey(c1) || menustate == MENU_FILE_SELECT2 || menustate == MENU_FRONTIER2 /* FRONTIER */ || ((menustate == MENU_COMMON2) && (menusub == 17)) || ((menustate == MENU_SYSTEM2) && (menusub == 5)))
 			{
 				c = c1;
 				hold_cnt++;
@@ -910,6 +914,7 @@ const char* get_rbf_name_bootcore(char *str)
 
 static void vga_nag()
 {
+	if (fe_loading_active()) return; // FRONTIER: the framebuffer is the loading screen, not a console
 	if (video_fb_state() && !(cfg.fb_terminal == 2 && !cfg.vga_scaler && !cfg.direct_video))
 	{
 		EnableOsd_on(OSD_VGA);
@@ -1717,6 +1722,7 @@ void HandleUI(void)
 				{
 					menustate = MENU_SELECT_INI1;
 				}
+				else if (is_menu() && frontier_enabled()) menustate = MENU_FRONTIER1; // FRONTIER
 				else if (is_menu())
 				{
 					menusub = 6;
@@ -2346,6 +2352,7 @@ void HandleUI(void)
 	} break;
 
 	case MENU_CORES2:
+		if (frontier_enabled()) { fpga_load_rbf("menu.rbf"); break; } // FRONTIER: Alt+F12 in a game, back to Frontier
 		SelectFile("", 0, SCANO_CORES, MENU_CORE_FILE_SELECTED1, MENU_NONE1);
 		break;
 
@@ -7907,6 +7914,7 @@ void HandleUI(void)
 	case MENU_SYSTEM2:
 		if (menu)
 		{
+			if (frontier_enabled()) { menustate = MENU_NONE1; break; } // FRONTIER
 			SelectFile("", 0, SCANO_CORES, MENU_CORE_FILE_SELECTED1, MENU_SYSTEM1);
 			break;
 		}
@@ -8408,6 +8416,43 @@ void HandleUI(void)
 
 	case MENU_CORE_FILE_CANCELED:
 		SelectFile("", 0, SCANO_CORES, MENU_CORE_FILE_SELECTED1, cp_MenuCancel);
+		break;
+
+	case MENU_FRONTIER1: // FRONTIER
+		OsdMenuCtl(0);
+		frontier_start();
+		menustate = MENU_FRONTIER2;
+		break;
+
+	case MENU_FRONTIER2: // FRONTIER
+		switch (frontier_poll(c, menu))
+		{
+		case FE_LAUNCH:
+			OsdMenuCtl(1);
+			snprintf(selPath, sizeof(selPath), "%s", frontier_selected_path());
+			snprintf(SelectedDir, sizeof(SelectedDir), "%s", selPath);
+			p = strrchr(SelectedDir, '/');
+			if (p) *p = 0;
+			else SelectedDir[0] = 0;
+			snprintf(SelectedLabel, sizeof(SelectedLabel), "%s", frontier_selected_label());
+			menustate = MENU_CORE_FILE_SELECTED1;
+			break;
+
+		case FE_OPEN_OSD:
+			OsdMenuCtl(1);
+			menusub = 0;
+			menustate = MENU_SYSTEM1;
+			break;
+
+		case FE_OPEN_BROWSER:
+			OsdMenuCtl(1);
+			menusub = 0;
+			SelectFile("", 0, SCANO_CORES, MENU_CORE_FILE_SELECTED1, MENU_SYSTEM1);
+			break;
+
+		default:
+			break;
+		}
 		break;
 
 	case MENU_ADVANCED_MAP_LIST1:
@@ -9162,6 +9207,7 @@ static char pchar[] = { 0x8C, 0x8E, 0x8F, 0x90, 0x91, 0x7F };
 
 void ProgressMessage(const char* title, const char* text, int current, int max)
 {
+	if (frontier_progress(title, text, current, max)) return; // FRONTIER: loading screen of the theme
 	static int progress;
 	if (!current && !max)
 	{

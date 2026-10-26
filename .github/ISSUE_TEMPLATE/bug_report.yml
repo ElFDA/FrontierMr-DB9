@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting! Please check the [guides](https://github.com/ElFDA/FrontierMr#guides) first:
+        Thanks for reporting! Please check the [guides](https://github.com/ElFDA/FrontierMr-DB9#guides) first:
         many questions (scraper, lists, which version of a game starts, black screen, Coin-Op) are answered there.
         You can write in English or Italian.
   - type: input

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Build a distributable Frontier ZIP with the current installer and assets.
 
+MiSTer-DB9 version (repository FrontierMr-DB9): the ZIP only, no database for update_all
+yet; --no-menu leaves out frontier/bin/menu.rbf (the DB9 menu.rbf of the SD is used).
+
 The SD files are those of tools/fe/sd, plus bin/MiSTer, menu.rbf, lib/fe_av.so
 (tools/fe/fe_av/build.sh) and the ScreenScraper key (tools/fe/ss_key.py).
 --db-url also sets up Frontier's updates through update_all
@@ -36,7 +39,10 @@ def main():
     date = datetime.now(timezone.utc).date().isoformat()
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--output', type=Path, default=ROOT / 'dist' / ('Frontier_' + date))
-    parser.add_argument('--menu', type=Path, default=ROOT.parent / 'MisterMenu/output_files/menu.rbf')
+    parser.add_argument('--menu', type=Path, default=ROOT.parent / 'MisterMenu-db9/output_files/menu.rbf',
+                        help="Frontier's menu.rbf (the DB9 menu core with Frontier's patch)")
+    parser.add_argument('--no-menu', action='store_true',
+                        help='no frontier/bin/menu.rbf: the menu.rbf in the root of the SD (DB9\'s) is used')
     parser.add_argument('--mister', type=Path, default=ROOT / 'bin/MiSTer')
     parser.add_argument('--db-url', help="URL of Frontier's db.json.zip (enables updates through update_all)")
     parser.add_argument('--zip-url', help='URL where the ZIP is published: also writes db.json.zip')
@@ -59,7 +65,9 @@ def main():
     if output.exists() or archive.exists():
         parser.error('Output already exists; choose a new --output path.')
     fe_av = ROOT / 'tools/fe/sd/frontier/lib/fe_av.so'
-    for path in (args.mister, args.menu, fe_av):
+    if args.db_url or args.zip_url or args.release:
+        parser.error('This is the MiSTer-DB9 version: no database for update_all yet.')
+    for path in (args.mister, fe_av) + (() if args.no_menu else (args.menu,)):
         if not path.is_file() or path.stat().st_size == 0:
             parser.error('Required binary is missing or empty: %s' % path)
     key = ROOT / 'tools/fe/sd/frontier/scraper/ss_dev.key'
@@ -70,7 +78,8 @@ def main():
     sd = ROOT / 'tools/fe/sd'
     if args.public:
         # the same files as the repository (guides cut, local themes out)
-        subprocess.run([sys.executable, str(ROOT / 'tools/fe/publish.py'), '--export', temp.name], check=True)
+        subprocess.run([sys.executable, str(ROOT / 'tools/fe/publish.py'), '--ref', 'HEAD', '--upstream', 'db9/master',
+                        '--export', temp.name], check=True)
         sd = Path(temp.name) / 'tools/fe/sd'
     setup = output / 'SD/frontier_setup'
     setup.mkdir(parents=True)
@@ -79,7 +88,8 @@ def main():
     shutil.copytree(sd / 'Scripts', output / 'SD/Scripts', ignore=ignore)
     (setup / 'frontier/bin').mkdir()
     shutil.copy2(args.mister, setup / 'frontier/bin/MiSTer')
-    shutil.copy2(args.menu, setup / 'frontier/bin/menu.rbf')
+    if not args.no_menu:
+        shutil.copy2(args.menu, setup / 'frontier/bin/menu.rbf')
     (setup / 'frontier/lib').mkdir(exist_ok=True)
     shutil.copy2(fe_av, setup / 'frontier/lib/fe_av.so')
     if args.no_ss_key:
@@ -91,9 +101,13 @@ def main():
             '[%s]\ndb_url = %s\n' % (make_db.DB_ID, args.db_url))
     for path in (output / 'SD/Scripts').glob('*.sh'):
         path.chmod(0o755)
-    for name in ('GUIDA_INSTALLAZIONE_ita.txt', 'INSTALL.txt'):
-        text = (ROOT / 'tools/fe/package' / name).read_text().replace('@BUILD_DATE@', date)
-        (output / name).write_text(text)
+    flavour = (("Menu core: the DB9 menu.rbf of your SD, unchanged (a CRT shows the HDMI picture).",
+                "Menu core: DB9's menu.rbf, invariato (un CRT mostra l'immagine della HDMI).") if args.no_menu else
+               ("Menu core: Frontier's menu.rbf (DB9 + second framebuffer) in frontier/bin: HD on HDMI and 240p on the CRT.",
+                "Menu core: il menu.rbf di Frontier (DB9 + secondo framebuffer) in frontier/bin: HD sulla HDMI e 240p sul CRT."))
+    for name, text_flavour in (('GUIDA_INSTALLAZIONE_DB9_ita.txt', flavour[1]), ('INSTALL_DB9.txt', flavour[0])):
+        text = (ROOT / 'tools/fe/package' / name).read_text().replace('@BUILD_DATE@', date).replace('@FLAVOUR@', text_flavour)
+        (output / name.replace('_DB9', '')).write_text(text)
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
         for path in sorted((output / 'SD').rglob('*')) + sorted(output.glob('*.txt')):
             if path.is_file():

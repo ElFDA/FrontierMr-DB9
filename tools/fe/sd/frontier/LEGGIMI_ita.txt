@@ -7,10 +7,25 @@ avvisi sono scritti come compaiono sullo schermo.
 
 Frontier sostituisce la schermata di scelta dei core del menu. Tutto il
 resto del MiSTer funziona come prima.
+
+VERSIONE MISTER-DB9
+  Questo pacchetto e' per un MiSTer che usa il fork MiSTer-DB9 (pad DB9 /
+  DB15 su USER_IO). Il suo MiSTer e' il Main_MiSTer di DB9 con Frontier.
+  - Versione di prova: i pad non sono stati provati con Frontier (chi lo ha
+    scritto non ha hardware DB9). Racconta cosa succede.
+  - I pad Saturn non funzionano: DB9 li abilita con una db9pro.key firmata
+    che le build fatte fuori dalla CI di DB9 non possono validare. DB9MD e
+    DB15 non hanno bisogno della chiave. Con il Saturn resta sulla build
+    DB9 ufficiale.
+  - Due release: la prima usa il menu.rbf di DB9 (CRT = stessa immagine
+    della HDMI), la seconda (-crt) aggiunge in frontier/bin il menu.rbf di
+    Frontier: HD sulla HDMI e 240p sul CRT insieme. Se con quello i pad non
+    muovono Frontier, reinstalla la prima release.
+  - Per ora niente database di update_all per Frontier: vedi AGGIORNAMENTI.
 Guide passo passo (scraper e account ScreenScraper, liste, quale versione di
 un gioco parte, modalita' Coin-Op, un gioco con lo schermo nero), in italiano
 i file *_ita.md:
-https://github.com/ElFDA/FrontierMr/tree/master/docs
+https://github.com/ElFDA/FrontierMr-DB9/tree/master/docs
 Le versioni precedenti si chiamavano "frontend": al primo avvio la cartella
 /media/fat/frontend diventa /media/fat/frontier (frontend.ini diventa
 frontier.ini, frontend.off frontier.off), con temi, preferiti, media e
@@ -540,13 +555,10 @@ AGGIORNAMENTI (update_all / downloader)
   update_all come al solito: niente comandi da terminale, modifiche agli ini
   o reinstallazioni dopo gli aggiornamenti. I core ufficiali, il menu.rbf
   ufficiale e tutto il resto continuano ad aggiornarsi.
-  Due modi per installare:
-  - con update_all: copia downloader_frontiermr.ini (da
-    https://github.com/ElFDA/FrontierMr/releases/latest/download/downloader_frontiermr.ini)
-    in /media/fat, lancia update_all, poi frontier_install;
-  - lo ZIP di una release (https://github.com/ElFDA/FrontierMr/releases):
-    copia il contenuto della sua cartella SD sulla scheda, poi
-    frontier_install.
+  Si installa dallo ZIP di una release (https://github.com/ElFDA/FrontierMr-DB9/releases):
+  copia il contenuto della sua cartella SD sulla scheda, poi
+  frontier_install. (La versione MiSTer-DB9 non ha ancora un database di
+  update_all suo.)
   Come MiSTer resta quello di Frontier:
   - il firmware di Frontier sta in frontier/bin (MiSTer e menu.rbf). Il
     MiSTer nella radice e' una copia; il menu.rbf nella radice resta quello
@@ -561,23 +573,22 @@ AGGIORNAMENTI (update_all / downloader)
     evita di scaricare per niente il MiSTer ufficiale. Se un aggiornamento
     riscrive downloader.ini o user-startup.sh, Frontier rimette le sue righe
     all'avvio successivo (log: frontier/update_protection.log).
-  - Aggiornamenti di Frontier: /media/fat/downloader_frontiermr.ini (lo
-    mette frontier_install) fa scaricare a update_all ogni release nuova e ne
-    prende i file di frontier/ e gli script frontier_* (frontier.ini,
-    preferiti, liste, gamelist e media non vengono mai sostituiti). Dopo
-    l'aggiornamento il MiSTer si riavvia e il guardiano installa il MiSTer
-    nuovo.
+  - Aggiornamenti di Frontier: per ora copia la cartella SD del nuovo ZIP
+    sulla scheda e rilancia frontier_install (frontier.ini, preferiti,
+    liste, gamelist e media vengono conservati). Quando DB9 pubblica un
+    MiSTer nuovo, il guardiano tiene quello di Frontier fino a una nuova
+    release di questo pacchetto.
   Se hai installato un vecchio pacchetto di Frontier, copia la cartella SD
   del nuovo pacchetto sulla scheda e rilancia frontier_install una volta:
   nella radice torna il menu.rbf ufficiale (al piu' tardi col prossimo
   update_all; quello di Frontier sta in frontier/bin) e frontier_crt_menu non serve piu'. Impostazioni e dati
   vengono conservati.
   frontier_on_off cambia solo l'interfaccia; MiSTer resta quello di Frontier.
-  TORNARE AL FIRMWARE UFFICIALE: F12 -> Scripts -> frontier_uninstall. Ferma
+  TORNARE AL MiSTer DI PRIMA: F12 -> Scripts -> frontier_uninstall. Ferma
   il guardiano, toglie le righe e il database di Frontier dalla
   configurazione degli aggiornamenti e rimette MiSTer.orig (salvato da
-  frontier_install); senza MiSTer.orig il MiSTer ufficiale arriva col
-  prossimo update_all. File, impostazioni e media di Frontier restano sulla
+  frontier_install); senza MiSTer.orig arriva col prossimo update_all
+  quello del suo database (DB9). File, impostazioni e media di Frontier restano sulla
   SD: frontier_install lo riporta.
   Non eseguire altri aggiornamenti durante l'installazione. Se non riesce a
   configurare la protezione, lo script si ferma prima di sostituire MiSTer;
@@ -701,6 +712,7 @@ QUESTA CARTELLA (/media/fat/frontier)
                     tengono MiSTer dopo gli aggiornamenti (vedi AGGIORNAMENTI)
   downloader_frontiermr.ini
                     database di Frontier per update_all, copiato in /media/fat
+                    (non c'e' ancora nei pacchetti MiSTer-DB9)
   old/              cartelle di versioni precedenti (il tema "default", ora
                     "simple")
   scraper/          fe_scrape.py: scarica dati e immagini; genres.ini,
@@ -752,7 +764,7 @@ LAYOUT TESTUALE
 CREARE UN TEMA
   L'editor e' per il PC, non per il MiSTer: e' un solo file, theme_editor.html,
   che funziona anche senza internet. Si scarica dalla pagina Releases di
-  FrontierMr (https://github.com/ElFDA/FrontierMr/releases/latest/download/theme_editor.html)
+  FrontierMr (https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/theme_editor.html)
   e si apre con Chrome o Edge, "Open folder" su una copia di themes/simple, modificare, "Save to folder",
   copiare la cartella in /media/fat/frontier/themes/, mettere
   theme=<nome> in frontier.ini e premere F5.

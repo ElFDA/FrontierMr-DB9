@@ -1,0 +1,50 @@
+FRONTIER PER MISTER-DB9 - INSTALLAZIONE
+=======================================
+
+Pacchetto del @BUILD_DATE@.
+@FLAVOUR@
+
+Questa e' una versione DI PROVA per un MiSTer che usa il fork MiSTer-DB9. Non
+e' ancora stata provata con i pad DB9, e i pad Saturn non funzionano (DB9 li
+abilita con una db9pro.key firmata che le build fatte fuori dalla CI di DB9
+non possono validare; DB9MD e DB15 non ne hanno bisogno). Raccontaci cosa
+succede.
+
+1. Copia il CONTENUTO della cartella SD dello zip nella radice della SD del
+   MiSTer. Se stai aggiornando Frontier, sostituisci i file quando richiesto.
+2. Sul MiSTer apri F12 -> Scripts -> frontier_install.
+   L'installazione salva il MiSTer che hai adesso (quello di DB9), conserva
+   le tue impostazioni e protegge Frontier dagli aggiornamenti. Il MiSTer si
+   riavvia.
+3. Se hai un CRT collegato alla VGA della I/O board, lancia anche
+   F12 -> Scripts -> frontier_crt (c'e' anche in Frontier Settings -> CRT
+   output). Rilanciato lo spegne.
+
+Dopo l'installazione puoi usare update_all con il database DB9 come al
+solito. Se un aggiornamento rimette il MiSTer di DB9, al riavvio torna quello
+di Frontier (lo fa frontier/guard.sh). Per ora non c'e' un database per
+Frontier stesso: per aggiornarlo copia la cartella SD del nuovo pacchetto e
+rilancia frontier_install (impostazioni, preferiti, liste e media restano).
+
+DISATTIVARE O RIATTIVARE L'INTERFACCIA
+  F12 -> Scripts -> frontier_on_off. Il MiSTer resta quello di Frontier.
+
+TORNARE AL MiSTer DI PRIMA
+  F12 -> Scripts -> frontier_uninstall.
+  Ferma la protezione, toglie Frontier dagli aggiornamenti e rimette il
+  MiSTer che avevi prima (MiSTer.orig); se manca, col prossimo update_all
+  arriva quello di DB9. Media e impostazioni di Frontier restano sulla SD nel
+  caso tu voglia reinstallarlo.
+
+SE L'INSTALLAZIONE SI FERMA
+  Non avviare altri script contemporaneamente all'installazione. Se la
+  protezione non puo' essere configurata, l'installazione si ferma prima di
+  sostituire il binario MiSTer. Invia il messaggio di errore a chi ti ha dato
+  il pacchetto; il dettaglio e' in frontier/update_protection.log.
+
+GUIDA COMPLETA
+  Dopo l'installazione trovi frontier/LEGGIMI_ita.txt sulla SD (sezione
+  AGGIORNAMENTI). Include impostazioni video, temi, giochi, scraper,
+  preferiti e liste.
+
+Problemi e segnalazioni: https://github.com/ElFDA/FrontierMr-DB9/issues

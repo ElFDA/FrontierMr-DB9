@@ -28,7 +28,7 @@ STEP 0 - WHAT YOU NEED
   - a PC with Chrome or Edge (they can save straight into the folder;
     with other browsers use "Download .ini" and copy the files yourself)
   - the editor: the file theme_editor.html from the Releases page of FrontierMr
-    (https://github.com/ElFDA/FrontierMr/releases/latest/download/theme_editor.html),
+    (https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/theme_editor.html),
     open it with a double click, it works offline
   - the pictures and fonts of City Pop: from tools/fe/sd/frontier/themes/
     or from /media/fat/frontier/themes/ on the MiSTer

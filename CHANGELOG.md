@@ -1,8 +1,34 @@
 # Changelog
 
 All the releases of Frontier, newest first.
-Each release is on the [Releases page](https://github.com/ElFDA/FrontierMr/releases); the text of
+Each release is on the [Releases page](https://github.com/ElFDA/FrontierMr-DB9/releases); the text of
 a release is its entry here.
+The entries ending in `-db9` are the releases of this repository (the MiSTer-DB9 version); the
+others are the releases of [FrontierMr](https://github.com/ElFDA/FrontierMr), where they were made.
+
+## v2026.10.26-db9-crt
+* **Frontier for MiSTer-DB9, with Frontier's menu core** (test version, same `MiSTer` as `v2026.10.26-db9`):
+  `frontier/bin/menu.rbf` is the menu core of MiSTer-DB9 (`Menu_MiSTer` fork, `joydb`) plus Frontier's second
+  framebuffer, so a CRT on the VGA output shows 240p while HDMI shows the HD picture. Built with Quartus 17.0
+  (setup slack +0.310 ns, hold +0.246 ns). It changes the core that reads the pads in the menu: **not tried on
+  hardware**, nor with DB9 pads. If the pads do not move Frontier with it, install `v2026.10.26-db9` again.
+* Based on MiSTer-DB9/Main_MiSTer `b811caa` (upstream Release 20261010) and Menu_MiSTer `4307c76`.
+* Saturn pads do not work (see `v2026.10.26-db9`).
+
+## v2026.10.26-db9
+* **First Frontier for MiSTer-DB9** (test version): `MiSTer` is the MiSTer-DB9 fork of Main_MiSTer with
+  Frontier on top (one conflict, two `#include` lines). The menu core is DB9's own `menu.rbf`, unchanged: the
+  package has no `frontier/bin/menu.rbf`, so the one in the root of the SD is used and DB9's database keeps it
+  current. Frontier works on HDMI; a CRT shows the HDMI picture. Based on MiSTer-DB9/Main_MiSTer `b811caa`
+  (upstream Release 20261010).
+* **Not tried with DB9 pads** (no DB9 hardware): Frontier should be driven by the keys the DB9 fork sends to
+  the OSD (Start + C/A/B). Please report what happens.
+* **No Saturn**: DB9 enables Saturn with a signed `db9pro.key`; the secret that checks it is injected by
+  DB9's CI and is not public, so builds made elsewhere cannot validate the key. DB9MD and DB15 do not use it.
+* **No update_all database for Frontier yet** (install from the ZIP); DB9's database keeps working and the
+  update protection (`frontier/guard.sh`, `!misterfirmware`) applies to it: it uses the same
+  `distribution_mister` id and tags as the official one (checked on its index, not yet with the Downloader).
+* `tools/fe/package.py --no-menu`, `tools/fe/publish.py --upstream --branch`.
 
 ## v2026.10.25b
 * **Pictures, videos and descriptions for the launchers of a system** (the MGL files listed with `launchers=`,

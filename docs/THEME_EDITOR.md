@@ -7,7 +7,7 @@ Italian: [THEME_EDITOR_ita.md](THEME_EDITOR_ita.md).
 
 ## Get it
 
-* Download [theme_editor.html](https://github.com/ElFDA/FrontierMr/releases/latest/download/theme_editor.html)
+* Download [theme_editor.html](https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/theme_editor.html)
   (it is a file of every release; it is **not** in the ZIP for the SD card,
   because it runs on the PC).
 * Open it with Chrome or Edge (double click). They save straight into the

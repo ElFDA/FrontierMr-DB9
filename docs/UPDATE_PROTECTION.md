@@ -1,5 +1,12 @@
 # Frontier and update_all
 
+> **MiSTer-DB9 version.** The protection below works the same here, but with the
+> database of MiSTer-DB9 (`dbencc`, the same `distribution_mister` id and the same
+> `misterfirmware` / `menu` tags as the official one; checked on its index, not yet
+> run against the Downloader). Goal 2 does not apply yet: this repository has no
+> database for Frontier itself, so a new release is installed by copying its ZIP
+> and running `frontier_install`. Goal 4 puts back the MiSTer you had (`MiSTer.orig`).
+
 Frontier replaces `/media/fat/MiSTer`, a file the official distribution also
 updates. Goals:
 

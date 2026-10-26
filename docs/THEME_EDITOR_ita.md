@@ -7,7 +7,7 @@ English: [THEME_EDITOR.md](THEME_EDITOR.md).
 
 ## Dove prenderlo
 
-* Scarica [theme_editor.html](https://github.com/ElFDA/FrontierMr/releases/latest/download/theme_editor.html)
+* Scarica [theme_editor.html](https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/theme_editor.html)
   (è un file di ogni release; **non** è nello ZIP per la SD, perché gira sul PC).
 * Aprilo con Chrome o Edge (doppio clic). Salvano direttamente nella cartella del
   tema; gli altri browser possono solo scaricare i file `.ini` con

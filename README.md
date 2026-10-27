@@ -6,7 +6,8 @@
 > that reads its pads through the DB9 / DB15 / SNAC adapters can use Frontier.
 > Everything below describes Frontier itself; read this box first.
 >
-> * **Test version.** The author has no DB9 hardware. Reports are welcome:
+> * **Beta.** The author has no DB9 hardware: one tester confirmed the DB9
+>   joysticks in Frontier's menus and in the games. Reports are welcome:
 >   [issues](https://github.com/ElFDA/FrontierMr-DB9/issues).
 > * **No Saturn.** DB9 enables the Saturn pads only with a signed `db9pro.key`,
 >   checked against a secret that is not public. Builds made outside the
@@ -43,7 +44,8 @@ themeable graphical front end drawn on the framebuffer. Everything else
 * Screensaver with random games, loading screens drawn by the theme, Coin-Op
   mode (last game at power on, panic combo), CRT output next to HDMI.
 * Safe with `update_all`: updates never put the DB9 firmware back over
-  Frontier's, and one script brings your previous MiSTer back.
+  Frontier's, update_all also updates Frontier, and one script brings your
+  previous MiSTer back.
 
 ## Screenshots
 
@@ -60,27 +62,29 @@ Taken on a real MiSTer with the `citypop_blue` theme.
 
 ## Install
 
-The scripts are in the MiSTer menu: F12 -> Scripts.
+Either way, the scripts are in the MiSTer menu: F12 -> Scripts.
+
+**Through update_all**
+1. Copy [downloader_frontiermr_db9.ini](https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/downloader_frontiermr_db9.ini)
+   to the root of the SD card (`/media/fat`).
+2. Run update_all: it downloads Frontier into `/media/fat/frontier`.
+3. F12 -> Scripts -> `frontier_install`. The MiSTer reboots into Frontier.
 
 **From the release ZIP**
 1. Download the ZIP of the [latest release](https://github.com/ElFDA/FrontierMr-DB9/releases/latest) and copy
    the contents of its `SD` folder to the root of the SD card.
 2. F12 -> Scripts -> `frontier_install`. The MiSTer reboots into Frontier.
+   It also adds Frontier's database for update_all (`downloader_frontiermr_db9.ini`,
+   in the root of the SD), so Frontier is updated by update_all together with
+   everything else.
 
 With a CRT on the VGA output of the analog I/O board, also run
 F12 -> Scripts -> `frontier_crt` (or, in Frontier, Frontier Settings ->
 CRT output). Run it again to turn it off.
 
 Then use update_all (with the DB9 database) as usual: it will not put the DB9
-MiSTer back over Frontier's. `frontier_install` also adds Frontier's database
-for update_all (`downloader_frontiermr_db9.ini`, in the root of the SD), so
-Frontier is updated by update_all together with everything else. Frontier keeps
-your settings, favorites, lists and scraped media.
-
-To install Frontier through update_all alone, without the ZIP, download
-[`downloader_frontiermr_db9.ini`](https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/downloader_frontiermr_db9.ini)
-to the root of the SD card and run update_all; then F12 -> Scripts ->
-`frontier_install`.
+MiSTer back over Frontier's. Frontier keeps your settings, favorites, lists
+and scraped media through updates.
 
 | Script | What it does |
 |---|---|
@@ -228,9 +232,10 @@ Video playback needs `lib/fe_av.so`, built by `tools/fe/fe_av/build.sh`
 (FFmpeg 7.1.1, LGPL build, see `tools/fe/sd/frontier/lib/FFMPEG_LICENSE.txt`).
 Without it Frontier works as well, with pictures only.
 
-`tools/fe/package.py [--menu FILE | --no-menu]` makes the ZIP of a release;
-with `--release TAG --owner USER` also the database (`make_db.py`, id
-`frontiermr_db9`) and the release assets.
+`tools/fe/package.py [--menu FILE | --no-menu] --release TAG --owner USER` makes
+the ZIP of a release and the database that lets update_all update Frontier
+(`make_db.py`, id `frontiermr_db9`): it takes every file from that ZIP, so a
+release is the ZIP plus `downloader_frontiermr_db9.ini`.
 
 ### Menu core
 

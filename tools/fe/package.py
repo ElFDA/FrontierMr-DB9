@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """Build a distributable Frontier ZIP with the current installer and assets.
 
-MiSTer-DB9 version (repository FrontierMr-DB9): the ZIP only, no database for update_all
-yet; --no-menu leaves out frontier/bin/menu.rbf (the DB9 menu.rbf of the SD is used).
+MiSTer-DB9 version (repository FrontierMr-DB9, database id frontiermr_db9);
+--no-menu leaves out frontier/bin/menu.rbf (the DB9 menu.rbf of the SD is used).
 
 The SD files are those of tools/fe/sd, plus bin/MiSTer, menu.rbf, lib/fe_av.so
 (tools/fe/fe_av/build.sh) and the ScreenScraper key (tools/fe/ss_key.py).
 --db-url also sets up Frontier's updates through update_all
-(frontier/downloader_frontiermr.ini, copied to the SD root by the installer);
+(frontier/downloader_frontiermr_db9.ini, copied to the SD root by the installer);
 --zip-url writes the database, which takes every file from this ZIP published
 at that URL (see make_db.py).
 
-A GitHub release of FrontierMr (tag on the commit of "publish" made from the
+A GitHub release of FrontierMr-DB9 (tag on the commit of "publish" made from the
 same frontier commit, see publish.py):
-  package.py --release v2026.10.22 --owner USER
+  package.py --release v2026.10.26b-db9 --owner USER
 uses the public files only and writes in the output folder db.json.zip (for
-the "db" branch) and assets/ for the release: the ZIP, downloader_frontiermr.ini
+the "db" branch) and assets/ for the release: the ZIP, downloader_frontiermr_db9.ini
 (to start an installation through update_all) and theme_editor.html (for the
 PC, standalone: it is not in the ZIP).
 """
@@ -32,7 +32,7 @@ import zipfile
 import make_db
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO = 'FrontierMr'
+REPO = 'FrontierMr-DB9'
 
 
 def main():
@@ -65,8 +65,6 @@ def main():
     if output.exists() or archive.exists():
         parser.error('Output already exists; choose a new --output path.')
     fe_av = ROOT / 'tools/fe/sd/frontier/lib/fe_av.so'
-    if args.db_url or args.zip_url or args.release:
-        parser.error('This is the MiSTer-DB9 version: no database for update_all yet.')
     for path in (args.mister, fe_av) + (() if args.no_menu else (args.menu,)):
         if not path.is_file() or path.stat().st_size == 0:
             parser.error('Required binary is missing or empty: %s' % path)
@@ -97,7 +95,7 @@ def main():
     else:
         shutil.copy2(key, setup / 'frontier/scraper' / key.name)
     if args.db_url:
-        (setup / 'frontier/downloader_frontiermr.ini').write_text(
+        (setup / 'frontier/downloader_frontiermr_db9.ini').write_text(
             '[%s]\ndb_url = %s\n' % (make_db.DB_ID, args.db_url))
     for path in (output / 'SD/Scripts').glob('*.sh'):
         path.chmod(0o755)
@@ -124,7 +122,7 @@ def main():
         assets = output / 'assets'
         assets.mkdir()
         shutil.copy2(archive, assets / archive.name)
-        shutil.copy2(setup / 'frontier/downloader_frontiermr.ini', assets / 'downloader_frontiermr.ini')
+        shutil.copy2(setup / 'frontier/downloader_frontiermr_db9.ini', assets / 'downloader_frontiermr_db9.ini')
         # the theme editor runs on the PC: a file of its own, not in the ZIP for the SD
         shutil.copy2(Path(temp.name) / 'tools/fe/theme_editor.html', assets / 'theme_editor.html')
         print('Release assets:', assets, sorted(p.name for p in assets.iterdir()))

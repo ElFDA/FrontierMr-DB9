@@ -21,7 +21,7 @@ body:
     attributes:
       label: How did you install Frontier?
       options:
-        - update_all (downloader_frontiermr.ini) + frontier_install
+        - update_all (downloader_frontiermr_db9.ini) + frontier_install
         - ZIP from the Releases page + frontier_install
         - Not installed yet / installation failed
     validations:

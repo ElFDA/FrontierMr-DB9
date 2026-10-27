@@ -9,7 +9,7 @@ frontier/bin/MiSTer to the root. This script sets up everything around it:
   MiSTer forgotten in Downloader's index (with the filter alone Downloader would
   delete it); '!menu' of older Frontier versions is removed, so the official
   menu.rbf in the root updates again;
-- the Downloader drop-in of Frontier's database (frontier/downloader_frontiermr.ini
+- the Downloader drop-in of Frontier's database (frontier/downloader_frontiermr_db9.ini
   copied to the root), so update_all also updates Frontier.
 --disable undoes all of it for frontier_uninstall.
 """
@@ -36,9 +36,9 @@ UNINSTALLED = Path('frontier/uninstalled')
 STARTUP = Path('linux/user-startup.sh')
 GUARD_MARK = 'frontier/guard.sh'
 GUARD_LINE = '[ -f /media/fat/frontier/guard.sh ] && sh /media/fat/frontier/guard.sh "$1" # Frontier guard'
-DB_ID = 'frontiermr'
-DROP_IN_TEMPLATE = Path('frontier/downloader_frontiermr.ini')
-DROP_IN = Path('downloader_frontiermr.ini')
+DB_ID = 'frontiermr_db9'
+DROP_IN_TEMPLATE = Path('frontier/downloader_frontiermr_db9.ini')
+DROP_IN = Path('downloader_frontiermr_db9.ini')
 
 
 def _norm(tag):

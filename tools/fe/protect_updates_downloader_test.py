@@ -77,8 +77,8 @@ def fixture(root, registered):
     (tree / 'frontier/frontier.ini').write_text('theme=default\n')
     shutil.copy2(GUARD, tree / 'frontier/guard.sh')
     shutil.copy2(PROTECT, tree / 'frontier/protect_updates.py')
-    (tree / 'frontier/downloader_frontiermr.ini').write_text(
-        '[frontiermr]\ndb_url = https://fixture.invalid/frontier.json\n')
+    (tree / 'frontier/downloader_frontiermr_db9.ini').write_text(
+        '[frontiermr_db9]\ndb_url = https://fixture.invalid/frontier.json\n')
     (tree / 'Scripts').mkdir()
     (tree / 'Scripts/frontier_on_off.sh').write_text('#!/bin/sh\n')
     # as a package ZIP: the database takes every file from it (one archive)
@@ -97,7 +97,7 @@ def fixture(root, registered):
     (root / 'linux').mkdir()
     (root / 'linux/user-startup.sh').write_text('#!/bin/sh\n')
     (root / 'frontier/bin').mkdir(parents=True)
-    for path in ('guard.sh', 'protect_updates.py', 'downloader_frontiermr.ini'):
+    for path in ('guard.sh', 'protect_updates.py', 'downloader_frontiermr_db9.ini'):
         shutil.copy2(tree / 'frontier' / path, root / 'frontier' / path)
     (root / 'frontier/frontier.ini').write_text('theme=user\n')
     (root / 'frontier/bin/MiSTer').write_bytes(FRONTIER_1)
@@ -185,7 +185,7 @@ if __name__ == '__main__':
         'MiSTer': FRONTIER_1, 'menu.rbf': b'official-menu',
         'frontier/bin/MiSTer': FRONTIER_2, 'frontier/bin/menu.rbf': b'frontier-menu-2',
         'frontier/frontier.ini': b'theme=user\n',
-        'downloader_frontiermr.ini': (root / 'frontier/downloader_frontiermr.ini').read_bytes()})
+        'downloader_frontiermr_db9.ini': (root / 'frontier/downloader_frontiermr_db9.ini').read_bytes()})
     guard(root)
     check(root, 'guard installs Frontier 2', {'MiSTer': FRONTIER_2})
     update(root, 'run2')
@@ -211,8 +211,8 @@ if __name__ == '__main__':
     root = scenario('drop_in_removed')
     protect(root)
     update(root, 'run1')
-    (root / 'downloader_frontiermr.ini').unlink()
-    (root / 'frontier/downloader_frontiermr.ini').unlink()
+    (root / 'downloader_frontiermr_db9.ini').unlink()
+    (root / 'frontier/downloader_frontiermr_db9.ini').unlink()
     update(root, 'run2')
     check(root, 'non-current database deletes nothing', {
         'frontier/bin/MiSTer': FRONTIER_2, 'frontier/guard.sh': GUARD.read_bytes(), 'MiSTer': FRONTIER_1})
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     update(root, 'run2')
     check(root, 'official firmware after uninstall', {
         'MiSTer': OFFICIAL, 'menu.rbf': b'official-menu',
-        'frontier/frontier.ini': b'theme=user\n', 'downloader_frontiermr.ini': None})
+        'frontier/frontier.ini': b'theme=user\n', 'downloader_frontiermr_db9.ini': None})
     guard(root)
     check(root, 'guard idle after uninstall', {'MiSTer': OFFICIAL})
     update(root, 'run3')
@@ -245,7 +245,7 @@ if __name__ == '__main__':
                               url='https://fixture.invalid/frontier_tree/' + rel)
     files['frontier/frontier.ini']['overwrite'] = False
     files['frontier/bin/MiSTer']['reboot'] = True
-    (server / 'frontier.json').write_text(json.dumps(dict(v=1, db_id='frontiermr', timestamp=1, files=files,
+    (server / 'frontier.json').write_text(json.dumps(dict(v=1, db_id='frontiermr_db9', timestamp=1, files=files,
         folders={str(Path(f).parent): {} for f in files if '/' in f})))
     protect(root)
     update(root, 'run1')

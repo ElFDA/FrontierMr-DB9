@@ -6,6 +6,36 @@ a release is its entry here.
 The entries ending in `-db9` are the releases of this repository (the MiSTer-DB9 version); the
 others are the releases of [FrontierMr](https://github.com/ElFDA/FrontierMr), where they were made.
 
+## Unreleased
+* **Pictures for the categories and for 46 systems in the themes** (City Pop, simple): the big picture of
+  Computer, Console, Handheld and Arcade on the main screen, and one for each system (PlayStation, SNES, Mega Drive,
+  C64, Amiga...) in its list, named by the id of `systems.ini` (`media/systems/psx.png`...). **Many thanks to
+  Dedaloso for the pictures!**
+* **Games on more disks and network shares are one list**: PSX on the SD card and more PSX on a second USB disk
+  (or on `/media/network`, `/media/fat/cifs`...) appear together, by title and in the folders view; a system found
+  only on a second disk appears too. `merge_games=0` in `frontier.ini` reads only `/media/fat/games`. The
+  scraper reads the same places. See `docs/STORAGE.md`.
+* **Games on several discs are one game**: a folder with only the discs of one game (PlayStation, Saturn,
+  Mega CD...: `Xenogears/Xenogears (Disc 1).chd` and `(Disc 2).chd`) is shown with the name of the folder and
+  **A** starts the first disc, instead of opening the folder. The details list all the discs, to start
+  another one. A folder with a single cue/chd/iso is a game too.
+* **Every file is a game, whatever its name** (no more region needed): `Crash Bandicoot.chd`, hacks, translations
+  and collections appear in the list of the system, with the file name as title, cleaned (`_` as spaces, no `[!]`,
+  no disc number: `Spyro (Disc 1)` + `Spyro (Disc 2)` are one game); GoodTools codes `(U)`, `(E)`, `(J)` count as
+  regions; No-Intro names still group the versions of a title. The scraper lists the same games. The **Folders** entry at the top of every system
+  is gone by default (`folders=1` brings it back: it is the way to the `Extra` folders and to zip files with
+  free names inside, which the lists still leave out). BIOS files named `[BIOS] ...` are not listed.
+
+## v2026.10.26b-db9
+* **Updates through update_all for MiSTer-DB9**: Frontier now has its own database for this repository
+  (`frontiermr_db9`, drop-in `downloader_frontiermr_db9.ini`, added by `frontier_install` or copied by hand from
+  the release assets). It carries this release, with Frontier's `menu.rbf` in `frontier/bin`.
+* **One release from now on**: the release with DB9's own `menu.rbf` (`v2026.10.26-db9`) is withdrawn and
+  this one has Frontier's menu core (HD on HDMI and 240p on the CRT at the same time). The `menu.rbf` in the root of your SD is not touched.
+* **F12 -> Cores in a game** lists all the cores again: it opened the folder of the launcher MGL that Frontier
+  makes in `frontier/launch/`, which holds only the game just started. It now opens the folder of the core's
+  `.rbf`, as in the original MiSTer. Alt+F12 still goes back to Frontier.
+
 ## v2026.10.26-db9-crt
 * **Frontier for MiSTer-DB9, with Frontier's menu core** (test version, same `MiSTer` as `v2026.10.26-db9`):
   `frontier/bin/menu.rbf` is the menu core of MiSTer-DB9 (`Menu_MiSTer` fork, `joydb`) plus Frontier's second
@@ -15,7 +45,7 @@ others are the releases of [FrontierMr](https://github.com/ElFDA/FrontierMr), wh
 * Based on MiSTer-DB9/Main_MiSTer `b811caa` (upstream Release 20261010) and Menu_MiSTer `4307c76`.
 * Saturn pads do not work (see `v2026.10.26-db9`).
 
-## v2026.10.26-db9
+## v2026.10.26-db9 (withdrawn)
 * **First Frontier for MiSTer-DB9** (test version): `MiSTer` is the MiSTer-DB9 fork of Main_MiSTer with
   Frontier on top (one conflict, two `#include` lines). The menu core is DB9's own `menu.rbf`, unchanged: the
   package has no `frontier/bin/menu.rbf`, so the one in the root of the SD is used and DB9's database keeps it

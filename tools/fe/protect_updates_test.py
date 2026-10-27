@@ -170,15 +170,15 @@ class ProtectionTests(unittest.TestCase):
 
     def test_drop_in_follows_the_template_unless_downloader_ini_has_the_database(self):
         template = self.root / protect.DROP_IN_TEMPLATE
-        template.write_text('[frontiermr]\ndb_url = https://example.invalid/a.json.zip\n')
+        template.write_text('[frontiermr_db9]\ndb_url = https://example.invalid/a.json.zip\n')
         self.assertEqual(0, self.run_script().returncode)
         drop_in = self.root / protect.DROP_IN
         self.assertEqual(template.read_bytes(), drop_in.read_bytes())
-        template.write_text('[frontiermr]\ndb_url = https://example.invalid/b.json.zip\n')
+        template.write_text('[frontiermr_db9]\ndb_url = https://example.invalid/b.json.zip\n')
         self.assertEqual(0, self.run_script().returncode)
         self.assertEqual(template.read_bytes(), drop_in.read_bytes())
         drop_in.unlink()
-        self.ini.write_text(self.ini.read_text() + '\n[FrontierMr]\ndb_url = https://example.invalid/c.json.zip\n')
+        self.ini.write_text(self.ini.read_text() + '\n[FrontierMr_DB9]\ndb_url = https://example.invalid/c.json.zip\n')
         self.assertEqual(0, self.run_script().returncode)
         self.assertFalse(drop_in.exists())
 
@@ -196,7 +196,7 @@ class ProtectionTests(unittest.TestCase):
         self.assertEqual('#!/bin/sh\n' + protect.GUARD_LINE + '\n', self.startup.read_text())
 
     def test_disable_undoes_everything_and_keeps_other_settings(self):
-        (self.root / protect.DROP_IN_TEMPLATE).write_text('[frontiermr]\ndb_url = https://example.invalid/a\n')
+        (self.root / protect.DROP_IN_TEMPLATE).write_text('[frontiermr_db9]\ndb_url = https://example.invalid/a\n')
         self.assertEqual(0, self.run_script().returncode)
         self.ini.write_text(self.ini.read_text().replace('!misterfirmware', '!misterfirmware !menu !manuals'))
         index = self.store.read_bytes()

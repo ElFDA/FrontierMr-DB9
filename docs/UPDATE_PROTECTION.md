@@ -3,9 +3,8 @@
 > **MiSTer-DB9 version.** The protection below works the same here, but with the
 > database of MiSTer-DB9 (`dbencc`, the same `distribution_mister` id and the same
 > `misterfirmware` / `menu` tags as the official one; checked on its index, not yet
-> run against the Downloader). Goal 2 does not apply yet: this repository has no
-> database for Frontier itself, so a new release is installed by copying its ZIP
-> and running `frontier_install`. Goal 4 puts back the MiSTer you had (`MiSTer.orig`).
+> run against the Downloader). Goal 2 uses Frontier's database for this repository
+> (`frontiermr_db9`, drop-in `downloader_frontiermr_db9.ini`). Goal 4 puts back the MiSTer you had (`MiSTer.orig`).
 
 Frontier replaces `/media/fat/MiSTer`, a file the official distribution also
 updates. Goals:
@@ -63,9 +62,9 @@ Frontier owns no official path: its firmware lives in `frontier/bin/`
   MiSTer forgotten in Downloader's index (so that it is not deleted), only
   avoids downloading the official binary for nothing. If it is lost, the guard
   undoes the update at the next reboot.
-* **Frontier's updates**: `/media/fat/downloader_frontiermr.ini` (a Downloader
-  drop-in, copied from `frontier/downloader_frontiermr.ini`) adds the database
-  `frontiermr` (`tools/fe/make_db.py`). Its only archive is the ZIP of the
+* **Frontier's updates**: `/media/fat/downloader_frontiermr_db9.ini` (a Downloader
+  drop-in, copied from `frontier/downloader_frontiermr_db9.ini`) adds the database
+  `frontiermr_db9` (`tools/fe/make_db.py`). Its only archive is the ZIP of the
   release: Downloader downloads it once and extracts, checking each file, what
   goes into `frontier/` and the `Scripts/frontier_*.sh` scripts; `frontier.ini` is never replaced (and
   favorites, lists, game data and media are not in it). A new

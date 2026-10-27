@@ -4,8 +4,8 @@ FRONTIER FOR MISTER-DB9 - INSTALLATION
 Package date: @BUILD_DATE@.
 @FLAVOUR@
 
-This is a TEST version for a MiSTer that uses the MiSTer-DB9 fork. It has not
-been tried with DB9 pads yet, and Saturn pads do not work (DB9 enables them
+This is a TEST version for a MiSTer that uses the MiSTer-DB9 fork. Saturn
+pads do not work (DB9 enables them
 with a signed db9pro.key that builds made outside DB9's own CI cannot
 validate; DB9MD and DB15 do not need it). Please tell us what happens.
 
@@ -20,9 +20,12 @@ validate; DB9MD and DB15 do not need it). Please tell us what happens.
 
 Use update_all with the DB9 database as usual afterwards. If an update puts
 DB9's MiSTer back, Frontier's returns at the next reboot (frontier/guard.sh).
-There is no database for Frontier itself yet: to update Frontier copy the SD
-folder of the new package and run frontier_install again (your settings,
-favorites, lists and media are kept).
+Frontier has its own database for update_all (frontiermr_db9, added by
+frontier_install as downloader_frontiermr_db9.ini in the root of the SD), so
+update_all updates Frontier too (your settings, favorites, lists and media are
+kept). Without this package: copy
+https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/downloader_frontiermr_db9.ini
+to the root of the SD, run update_all, then F12 -> Scripts -> frontier_install.
 
 SWITCH THE INTERFACE ON OR OFF
   Run F12 -> Scripts -> frontier_on_off. MiSTer stays Frontier's.

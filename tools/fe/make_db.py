@@ -9,7 +9,7 @@ docs/custom-databases-archives.md in Downloader_MiSTer). Nothing is downloaded
 from the repository: a release needs only the ZIP (and the drop-in to start).
 
   make_db.py --zip dist/Frontier_vX.zip \\
-             --url https://github.com/OWNER/FrontierMr/releases/download/vX/Frontier_vX.zip -o db.json.zip
+             --url https://github.com/OWNER/FrontierMr-DB9/releases/download/vX/Frontier_vX.zip -o db.json.zip
 
 Downloader rejects MiSTer and menu.rbf in the root from any database but the
 official one: Frontier's are in frontier/bin and frontier/guard.sh installs MiSTer.
@@ -21,7 +21,7 @@ from pathlib import Path
 import time
 import zipfile
 
-DB_ID = 'frontiermr'
+DB_ID = 'frontiermr_db9'
 ARC_ID = 'frontier'
 # where the files are in the package ZIP -> where they go on the SD card
 PREFIXES = (('SD/frontier_setup/frontier/', 'frontier/'), ('SD/Scripts/', 'Scripts/'))

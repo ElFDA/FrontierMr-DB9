@@ -6,28 +6,19 @@
 > that reads its pads through the DB9 / DB15 / SNAC adapters can use Frontier.
 > Everything below describes Frontier itself; read this box first.
 >
-> * **Test version, never tried with DB9 pads.** The author has no DB9 hardware.
->   Frontier should be driven by the keys the DB9 fork sends to the OSD
->   (Start + C/A/B), but nobody has checked it yet. Reports are welcome:
+> * **Test version.** The author has no DB9 hardware. Reports are welcome:
 >   [issues](https://github.com/ElFDA/FrontierMr-DB9/issues).
 > * **No Saturn.** DB9 enables the Saturn pads only with a signed `db9pro.key`,
 >   checked against a secret that is not public. Builds made outside the
 >   official DB9 CI cannot validate it, so Saturn stays locked here. DB9MD and
 >   DB15 do not use the key. If you use Saturn, stay on the official DB9 build.
-> * **Two releases**, same `MiSTer` (DB9 + Frontier), different menu core:
->   * [`v2026.10.26-db9`](https://github.com/ElFDA/FrontierMr-DB9/releases/tag/v2026.10.26-db9):
->     the menu core is the **DB9 `menu.rbf`, unchanged** (the one in the root of
->     your SD). The pads are handled by DB9's own code. Frontier works on HDMI;
->     a CRT shows the same picture as HDMI. **Start here.**
->   * [`v2026.10.26-db9-crt`](https://github.com/ElFDA/FrontierMr-DB9/releases/tag/v2026.10.26-db9-crt):
->     adds Frontier's `menu.rbf` (the DB9 menu core plus Frontier's second
->     framebuffer): **HD on HDMI and 240p on the CRT at the same time.** Only
->     useful with a CRT on the VGA output. It changes the core that reads the
->     pads in the menu, so it is the one to try second: if the pads do not move
->     Frontier with it, go back to the first release and tell us.
-> * No database for update_all yet: it will come when the releases are known to
->   work. Install from the ZIP (below). DB9's own database keeps working and
->   does not replace Frontier's `MiSTer`.
+> * **One release**: `MiSTer` (DB9 + Frontier) and Frontier's `menu.rbf` (the DB9
+>   menu core plus Frontier's second framebuffer, in `frontier/bin`): **HD on HDMI
+>   and 240p on the CRT at the same time.** The `menu.rbf` in the root of your SD
+>   (DB9's) is not touched and keeps updating with update_all.
+> * **Updates through update_all**: Frontier has its own database
+>   (`frontiermr_db9`). See "Install" below. DB9's own database keeps working
+>   and does not replace Frontier's `MiSTer`.
 > * Frontier is a derived work: GPL-3.0, like Main_MiSTer and MiSTer-DB9.
 
 # Frontier — a graphical front end for MiSTer
@@ -71,9 +62,9 @@ Taken on a real MiSTer with the `citypop_blue` theme.
 
 The scripts are in the MiSTer menu: F12 -> Scripts.
 
-**From the release ZIP** (the only way for now)
-1. Download the ZIP of a [release](https://github.com/ElFDA/FrontierMr-DB9/releases) and copy
-   the contents of its `SD` folder to the root of the SD card. Which one: see "Two releases" above.
+**From the release ZIP**
+1. Download the ZIP of the [latest release](https://github.com/ElFDA/FrontierMr-DB9/releases/latest) and copy
+   the contents of its `SD` folder to the root of the SD card.
 2. F12 -> Scripts -> `frontier_install`. The MiSTer reboots into Frontier.
 
 With a CRT on the VGA output of the analog I/O board, also run
@@ -81,10 +72,15 @@ F12 -> Scripts -> `frontier_crt` (or, in Frontier, Frontier Settings ->
 CRT output). Run it again to turn it off.
 
 Then use update_all (with the DB9 database) as usual: it will not put the DB9
-MiSTer back over Frontier's. There is no database for Frontier itself in this
-repository yet: to update Frontier, copy the SD folder of the new ZIP and run
-`frontier_install` again. Frontier keeps your settings, favorites, lists and
-scraped media.
+MiSTer back over Frontier's. `frontier_install` also adds Frontier's database
+for update_all (`downloader_frontiermr_db9.ini`, in the root of the SD), so
+Frontier is updated by update_all together with everything else. Frontier keeps
+your settings, favorites, lists and scraped media.
+
+To install Frontier through update_all alone, without the ZIP, download
+[`downloader_frontiermr_db9.ini`](https://github.com/ElFDA/FrontierMr-DB9/releases/latest/download/downloader_frontiermr_db9.ini)
+to the root of the SD card and run update_all; then F12 -> Scripts ->
+`frontier_install`.
 
 | Script | What it does |
 |---|---|
@@ -188,6 +184,8 @@ Settings -> CRT Geometry.
     pictures, space ([italiano](docs/SCRAPER_ita.md)).
   * [Favorites, Recent and My Lists](docs/LISTS.md): lists by hand and from a
     filter on the data of the games ([italiano](docs/LISTS_ita.md)).
+  * [Games on more disks and network shares](docs/STORAGE.md): SD card, second
+    USB disk, CIFS shares in one list ([italiano](docs/STORAGE_ita.md)).
   * [Which version of a game starts](docs/VERSIONS.md): the default region and
     version, `regions=`, the other versions ([italiano](docs/VERSIONS_ita.md)).
   * [Coin-Op mode](docs/COINOP.md): the last game at power on, the countdown,
@@ -230,8 +228,9 @@ Video playback needs `lib/fe_av.so`, built by `tools/fe/fe_av/build.sh`
 (FFmpeg 7.1.1, LGPL build, see `tools/fe/sd/frontier/lib/FFMPEG_LICENSE.txt`).
 Without it Frontier works as well, with pictures only.
 
-`tools/fe/package.py [--menu FILE | --no-menu]` makes the ZIP of a release
-(no database for update_all yet).
+`tools/fe/package.py [--menu FILE | --no-menu]` makes the ZIP of a release;
+with `--release TAG --owner USER` also the database (`make_db.py`, id
+`frontiermr_db9`) and the release assets.
 
 ### Menu core
 
@@ -257,7 +256,8 @@ To **[pierinolartista](https://www.twitch.tv/pierinolartista)**, the best
 beta tester in the world, able to break any software, even the most stable
 one. Every bug found there made Frontier better.
 
-To **Dedaloso**, for the City Pop theme.
+To **Dedaloso**, for the City Pop theme and for the pictures of the categories and
+of the systems in the themes.
 
 ## License
 

@@ -6,7 +6,19 @@ a release is its entry here.
 The entries ending in `-db9` are the releases of this repository (the MiSTer-DB9 version); the
 others are the releases of [FrontierMr](https://github.com/ElFDA/FrontierMr), where they were made.
 
-## Unreleased
+## v2026.10.27-db9
+* Has everything of FrontierMr `v2026.10.27` (the entry below), including the fix for F12 -> Cores, on top of MiSTer-DB9/Main_MiSTer `b811caa`.
+* **Updates through update_all for MiSTer-DB9**: Frontier now has its own database for this repository
+  (`frontiermr_db9`, drop-in `downloader_frontiermr_db9.ini`, added by `frontier_install` or copied by hand from
+  the release assets). It carries this release, with Frontier's `menu.rbf` in `frontier/bin`.
+* **One release from now on**: the release with DB9's own `menu.rbf` (`v2026.10.26-db9`) is withdrawn and
+  this one has Frontier's menu core (HD on HDMI and 240p on the CRT at the same time). The `menu.rbf` in the root of your SD is not touched.
+
+## v2026.10.27
+* **F12 -> Cores inside a game lists all the cores again**: it opened the folder of the launcher MGL that
+  Frontier makes in `frontier/launch/`, which holds only the game just started, so only that core was
+  there (arcade games were fine). It now opens the folder of the core's `.rbf`, as in the original MiSTer.
+  Alt+F12 still goes back to Frontier. Thanks to HerrBerzerk for the report.
 * **Pictures for the categories and for 46 systems in the themes** (City Pop, simple): the big picture of
   Computer, Console, Handheld and Arcade on the main screen, and one for each system (PlayStation, SNES, Mega Drive,
   C64, Amiga...) in its list, named by the id of `systems.ini` (`media/systems/psx.png`...). **Many thanks to
@@ -25,16 +37,6 @@ others are the releases of [FrontierMr](https://github.com/ElFDA/FrontierMr), wh
   regions; No-Intro names still group the versions of a title. The scraper lists the same games. The **Folders** entry at the top of every system
   is gone by default (`folders=1` brings it back: it is the way to the `Extra` folders and to zip files with
   free names inside, which the lists still leave out). BIOS files named `[BIOS] ...` are not listed.
-
-## v2026.10.26b-db9
-* **Updates through update_all for MiSTer-DB9**: Frontier now has its own database for this repository
-  (`frontiermr_db9`, drop-in `downloader_frontiermr_db9.ini`, added by `frontier_install` or copied by hand from
-  the release assets). It carries this release, with Frontier's `menu.rbf` in `frontier/bin`.
-* **One release from now on**: the release with DB9's own `menu.rbf` (`v2026.10.26-db9`) is withdrawn and
-  this one has Frontier's menu core (HD on HDMI and 240p on the CRT at the same time). The `menu.rbf` in the root of your SD is not touched.
-* **F12 -> Cores in a game** lists all the cores again: it opened the folder of the launcher MGL that Frontier
-  makes in `frontier/launch/`, which holds only the game just started. It now opens the folder of the core's
-  `.rbf`, as in the original MiSTer. Alt+F12 still goes back to Frontier.
 
 ## v2026.10.26-db9-crt
 * **Frontier for MiSTer-DB9, with Frontier's menu core** (test version, same `MiSTer` as `v2026.10.26-db9`):

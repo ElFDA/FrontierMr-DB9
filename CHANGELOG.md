@@ -6,7 +6,15 @@ a release is its entry here.
 The entries ending in `-db9` are the releases of this repository (the MiSTer-DB9 version); the
 others are the releases of [FrontierMr](https://github.com/ElFDA/FrontierMr), where they were made.
 
-## Unreleased
+## v2026.10.30-db9
+* Has everything of FrontierMr `v2026.10.30` (the entry below), on top of MiSTer-DB9/Main_MiSTer `b811caa`.
+* **No more unstable cores from update_all**: the filter written by `frontier_install` replaced the default filter
+  of the MiSTer-DB9 database (`!unstable !jtbeta !dualsdram`), so update_all started downloading the
+  `_Unstable` cores. Frontier now writes `filter = [MiSTer] !unstable !jtbeta !dualsdram !misterfirmware` and
+  fixes the older line by itself at the next start; the next update_all removes the unstable cores it had
+  added. Thanks to HerrBerzerk for the report.
+
+## v2026.10.30
 * **The theme editor as a program for Windows, macOS and Linux**: Frontier MRTE (`tools/fe/theme_editor.py`)
   is attached to every release as `FrontierThemeEditor-windows.exe`, `FrontierThemeEditor-macos.zip` (Apple
   Silicon) and `FrontierThemeEditor-linux.tar.gz`, with nothing to install: made by PyInstaller on GitHub
